@@ -1,7 +1,5 @@
-package Jama.test;
-import Jama.*;
+package Jama;
 import java.io.*;
-import java.util.zip.GZIPInputStream;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
@@ -10,11 +8,11 @@ import java.util.Locale;
 <P>
 Run the test from the command line using
 <BLOCKQUOTE><PRE><CODE>
- java Jama.test.TestMatrix 
+ java Jama.TestMatrix
 </CODE></PRE></BLOCKQUOTE>
 Detailed output is provided indicating the functionality being tested
 and whether the functionality is correctly implemented.   Exception handling
-is also tested.  
+is also tested.
 <P>
 The test is designed to run to completion and give a summary of any implementation errors
 encountered. The final output should be:
@@ -23,8 +21,8 @@ encountered. The final output should be:
       Total errors reported: n1
       Total warning reported: n2
 </CODE></PRE></BLOCKQUOTE>
-If the test does not run to completion, this indicates that there is a 
-substantial problem within the implementation that was not anticipated in the test design.  
+If the test does not run to completion, this indicates that there is a
+substantial problem within the implementation that was not anticipated in the test design.
 The stopping point should give an indication of where the problem exists.
 **/
 public class TestMatrix {
@@ -44,7 +42,7 @@ public class TestMatrix {
       double[][] rvals = {{1.,4.,7.},{2.,5.,8.,11.},{3.,6.,9.,12.}};
       double[][] pvals = {{4.,1.,1.},{1.,2.,3.},{1.,3.,6.}};
       double[][] ivals = {{1.,0.,0.,0.},{0.,1.,0.,0.},{0.,0.,1.,0.}};
-      double[][] evals = 
+      double[][] evals =
          {{0.,1.,0.,0.},{1.,0.,2.e-7,0.},{0.,-2.e-7,0.,1.},{0.,0.,1.,0.}};
       double[][] square = {{166.,188.,210.},{188.,214.,240.},{210.,240.,270.}};
       double[][] sqSolution = {{13.},{15.}};
@@ -52,12 +50,12 @@ public class TestMatrix {
       int rows=3,cols=4;
       int invalidld=5;/* should trigger bad shape for construction with val */
       int raggedr=0; /* (raggedr,raggedc) should be out of bounds in ragged array */
-      int raggedc=4; 
+      int raggedc=4;
       int validld=3; /* leading dimension of intended test Matrices */
       int nonconformld=4; /* leading dimension which is valid, but nonconforming */
       int ib=1,ie=2,jb=1,je=3; /* index ranges for sub Matrix */
-      int[] rowindexset = {1,2}; 
-      int[] badrowindexset = {1,3}; 
+      int[] rowindexset = {1,2};
+      int[] badrowindexset = {1,3};
       int[] columnindexset = {1,2,3};
       int[] badcolumnindexset = {1,2,4};
       double columnsummax = 33.;
@@ -65,10 +63,10 @@ public class TestMatrix {
       double sumofdiagonals = 15;
       double sumofsquares = 650;
 
-/** 
+/**
       Constructors and constructor-like methods:
          double[], int
-         double[][]  
+         double[][]
          int, int
          int, int, double
          int, int, double[][]
@@ -78,7 +76,7 @@ public class TestMatrix {
 **/
 
       print("\nTesting constructors and constructor-like methods...\n");
-      try{  
+      try{
          /** check that exception is thrown in packed constructor with invalid length **/
          A = new Matrix(columnwise,invalidld);
          errorCount = try_failure(errorCount,"Catch invalid length in packed constructor... ",
@@ -87,7 +85,7 @@ public class TestMatrix {
          try_success("Catch invalid length in packed constructor... ",
                      e.getMessage());
       }
-      try{ 
+      try{
          /** check that exception is thrown in default constructor
              if input array is 'ragged' **/
          A = new Matrix(rvals);
@@ -99,7 +97,7 @@ public class TestMatrix {
          errorCount = try_failure(errorCount,"Catch ragged input to constructor... ",
                      "exception not thrown in construction...ArrayIndexOutOfBoundsException thrown later");
       }
-      try{ 
+      try{
          /** check that exception is thrown in constructWithCopy
              if input array is 'ragged' **/
          A = Matrix.constructWithCopy(rvals);
@@ -125,16 +123,16 @@ public class TestMatrix {
       } else {
         try_success("constructWithCopy... ","");
       }
-      avals[0][0] = columnwise[0]; 
+      avals[0][0] = columnwise[0];
       I = new Matrix(ivals);
       try {
         check(I,Matrix.identity(3,4));
         try_success("identity... ","");
       } catch ( java.lang.RuntimeException e ) {
         errorCount = try_failure(errorCount,"identity... ","identity Matrix not successfully created");
-      }   
+      }
 
-/**   
+/**
       Access Methods:
          getColumnDimension()
          getRowDimension()
@@ -216,7 +214,7 @@ public class TestMatrix {
          errorCount = try_failure(errorCount,"get(int,int)... ","OutOfBoundsException expected but not thrown");
       }
       try {
-         if (B.get(B.getRowDimension()-1,B.getColumnDimension()-1) != 
+         if (B.get(B.getRowDimension()-1,B.getColumnDimension()-1) !=
              avals[B.getRowDimension()-1][B.getColumnDimension()-1] ) {
             errorCount = try_failure(errorCount,"get(int,int)... ","Matrix entry (i,j) not successfully retreived");
          } else {
@@ -250,7 +248,7 @@ public class TestMatrix {
       } catch ( java.lang.ArrayIndexOutOfBoundsException e ) {
          errorCount = try_failure(errorCount,"getMatrix(int,int,int,int)... ","Unexpected ArrayIndexOutOfBoundsException");
       }
-      
+
       try {
          M = B.getMatrix(ib,ie,badcolumnindexset);
          errorCount = try_failure(errorCount,"getMatrix(int,int,int[])... ","ArrayIndexOutOfBoundsException expected but not thrown");
@@ -263,7 +261,7 @@ public class TestMatrix {
          }
       } catch ( java.lang.IllegalArgumentException e1 ) {
          errorCount = try_failure(errorCount,"getMatrix(int,int,int[])... ","ArrayIndexOutOfBoundsException expected but not thrown");
-      } 
+      }
       try {
          M = B.getMatrix(ib,ie,columnindexset);
          try {
@@ -287,7 +285,7 @@ public class TestMatrix {
          }
       } catch ( java.lang.IllegalArgumentException e1 ) {
          errorCount = try_failure(errorCount,"getMatrix(int[],int,int)... ","ArrayIndexOutOfBoundsException expected but not thrown");
-      } 
+      }
       try {
          M = B.getMatrix(rowindexset,jb,je);
          try {
@@ -311,7 +309,7 @@ public class TestMatrix {
          }
       } catch ( java.lang.IllegalArgumentException e1 ) {
          errorCount = try_failure(errorCount,"getMatrix(int[],int[])... ","ArrayIndexOutOfBoundsException expected but not thrown");
-      } 
+      }
       try {
          M = B.getMatrix(rowindexset,columnindexset);
          try {
@@ -454,7 +452,7 @@ public class TestMatrix {
          errorCount = try_failure(errorCount,"setMatrix(int[],int[],Matrix)... ","Unexpected ArrayIndexOutOfBoundsException");
       }
 
-/** 
+/**
       Array-like methods:
          minus
          minusEquals
@@ -501,7 +499,7 @@ public class TestMatrix {
 
       A = R.copy();
       B = Matrix.random(A.getRowDimension(),A.getColumnDimension());
-      C = A.minus(B); 
+      C = A.minus(B);
       try {
         S = A.plus(S);
         errorCount = try_failure(errorCount,"plus conformance check... ","nonconformance not raised");
@@ -619,7 +617,7 @@ public class TestMatrix {
         errorCount = try_failure(errorCount,"arrayTimesEquals... ","(A = R, A = A.*B, but A./B != R)");
       }
 
-/**   
+/**
       I/O methods:
          read
          print
@@ -669,7 +667,7 @@ public class TestMatrix {
          out.writeObject(R);
          ObjectInputStream sin = new ObjectInputStream(new FileInputStream(tmpname));
          A = (Matrix) sin.readObject();
- 
+
          try {
             check(A,R);
             try_success("writeObject(Matrix)/readObject(Matrix)...","");
@@ -701,7 +699,7 @@ public class TestMatrix {
          eig
          lu
          qr
-         svd 
+         svd
 **/
 
       print("\nTesting linear algebra methods...\n");
@@ -783,7 +781,7 @@ public class TestMatrix {
          errorCount = try_failure(errorCount,"rank()...","incorrect rank calculation");
       }
       B = new Matrix(condmat);
-      SVD = B.svd(); 
+      SVD = B.svd();
       double [] singularvalues = SVD.getSingularValues();
       try {
          check(B.cond(),singularvalues[0]/singularvalues[Math.min(B.getRowDimension(),B.getColumnDimension())-1]);
@@ -812,7 +810,7 @@ public class TestMatrix {
       SOL = new Matrix(sqSolution);
       SQ = SUB.getMatrix(0,SUB.getRowDimension()-1,0,SUB.getRowDimension()-1);
       try {
-         check(SQ.solve(SOL),O); 
+         check(SQ.solve(SOL),O);
          try_success("solve()...","");
       } catch ( java.lang.IllegalArgumentException e1 ) {
          errorCount = try_failure(errorCount,"solve()...",e1.getMessage());
@@ -820,7 +818,7 @@ public class TestMatrix {
          errorCount = try_failure(errorCount,"solve()...",e.getMessage());
       }
       A = new Matrix(pvals);
-      CholeskyDecomposition Chol = A.chol(); 
+      CholeskyDecomposition Chol = A.chol();
       Matrix L = Chol.getL();
       try {
          check(A,L.times(L.transpose()));
@@ -879,7 +877,7 @@ public class TestMatrix {
       if (x.length == y.length ) {
          for (int i=0;i<x.length;i++) {
             check(x[i],y[i]);
-         } 
+         }
       } else {
          throw new RuntimeException("Attempt to compare vectors of different lengths");
       }
